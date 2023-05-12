@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "kursovay 4-oop"
+version = "0.1.0"
+description = ""
+authors = ["Ilya Evlanov <ilya.evlanov@gmail.com>"]
+readme = "README.md"
+packages = [{include = "kursovay 4_oop"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
