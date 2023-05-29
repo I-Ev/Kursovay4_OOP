@@ -23,12 +23,16 @@ def get_hh_russian_areas():
 
 def get_platform_from_user() -> str:
     while True:
-        user_platform = int(input("\n#########################"
-                                  "\nДля поиска вакансий выберите ресурс:\n"
-                                  "[1] - HeadHunter.ru\n"
-                                  "[2] - SuperJob.ru\n"
-                                  "или нажмите [0] для выхода\n")
-                            )
+        try:
+            user_platform = int(input("\n#########################"
+                                      "\nДля поиска вакансий выберите ресурс:\n"
+                                      "[1] - HeadHunter.ru\n"
+                                      "[2] - SuperJob.ru\n"
+                                      "или нажмите [0] для выхода\n"))
+        except:
+            print("Введите правильную команду")
+            continue
+
         if user_platform == 0:
             exit()
         elif user_platform == 1:
@@ -108,7 +112,7 @@ def adaptation_hh_salary(data):
             return f"от {data['from']} {data['currency']}"
 
 
-def show_vacancies():
+def show_vacancies_hh():
     with open('files/vacancies_HH.json', encoding='UTF-8') as file:
         vacancies = json.load(file)
     if len(vacancies['items']) == 0:
@@ -136,4 +140,42 @@ def show_vacancies():
     print('Это все результаты поиска')
 
 
+def get_town_from_user():
+    """ Получает список регионов по API, выводит список пользователю и возвращает ID
+        выбранного региона"""
+    while True:
+        print('\nВведите город, в котором будем искать вакансии:\n')
+        try:
+            user_town = str(input()).capitalize()
+        except:
+            print('Введите корректный город')
+            continue
+        else:
+            break
+    return user_town
 
+
+def show_vacancies_sj():
+    with open('files/vacancies_SJ.json', encoding='UTF-8') as file:
+        vacancies = json.load(file)
+    if len(vacancies['objects']) == 0:
+        print("Вакансий по данным критериям не найдено")
+        return None
+    print(f"\n#############################\n"
+          f"Найдено вакансий - [{vacancies['total']}]\n"
+          f"#############################\n")
+    i = 1
+    for vacancy in vacancies['objects']:
+        print(f"[{i} из {vacancies['total']}] - {vacancy['profession']}\n"
+              f"зарплата: от {vacancy['payment_from']}\n"
+              f"описание: {vacancy['candidat']}\n"
+              f"ссылка на вакансию: {vacancy['link']}\n")
+        i += 1
+        user_input = input('Нажмите любую кнопку для продолжения или 0 для выхода \n')
+        try:
+            if int(user_input) == 0:
+                print("Вы успешно вышли из программы")
+                return None
+        except:
+            continue
+    print('Это все результаты поиска')

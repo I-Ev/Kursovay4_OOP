@@ -1,4 +1,13 @@
-class Vacancy:
+from abc import ABC, abstractmethod
+
+
+class Vacancy(ABC):
+    @abstractmethod
+    def __init__(self, json_data):
+        pass
+
+
+class VacancyHH(Vacancy):
     def __init__(self, json_data):
         self.name = json_data['name']
         self.city = json_data['area']['name']
@@ -22,9 +31,6 @@ class Vacancy:
             else:
                 self.__salary_to = json_data['salary']['to']
 
-
-
-
     def __str__(self):
         return f"{self.name} в компанию {self.employer_name} в городе {self.city}"
 
@@ -34,6 +40,7 @@ class Vacancy:
                f"self.salary_info= {self.salary_info}, " \
                f"self.eployer_name= {self.employer_name}, self.url= {self.url}" \
                f"self.description= {self.description}, self.requirement= {self.requirement} "
+
     @property
     def salary_from(self):
         return self.__salary_from
@@ -55,3 +62,50 @@ class Vacancy:
     #
     # def __ge__(self, other):
     #     return self.salary >= other.salary
+
+
+class VacancySJ(Vacancy):
+    def __init__(self, json_data):
+        self.name = json_data['profession']
+        self.city = json_data['town']['title']
+        self.employer_name = json_data['firm_name']
+        self.url = json_data['link']
+        self.description = json_data['vacancyRichText']
+
+        # блок с зарплатой
+        if json_data['payment_from'] == 0:
+            if json_data['payment_to'] == 0:
+                self.__salary_to = None
+                self.__salary_from = None
+                self.salary_info = False
+            else:
+                self.__salary_to = json_data['payment_to']
+                self.__salary_from = None
+                self.salary_info = True
+        else:
+            self.salary_info = True
+            self.__salary_from = json_data['payment_from']
+            if json_data['payment_to'] == 0:
+                self.__salary_to = None
+            else:
+                self.__salary_to = json_data['payment_to']
+
+
+    def __str__(self):
+        return f"{self.name} в компанию {self.employer_name} в городе {self.city}"
+
+    def __repr__(self):
+        return f"{self.__class__} (self.name= {self.name}, self.city= {self.city}, " \
+               f"self.salary_from= {self.__salary_from}, self.salary_to= {self.__salary_to}, " \
+               f"self.salary_info= {self.salary_info}, " \
+               f"self.eployer_name= {self.employer_name}, self.url= {self.url}" \
+               f"self.description= {self.description}"
+
+    @property
+    def salary_from(self):
+        return self.__salary_from
+
+    @property
+    def salary_to(self):
+        return self.__salary_to
+
