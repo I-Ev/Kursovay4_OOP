@@ -1,5 +1,6 @@
 import user_function as uf
 import API_classes as api
+import vacancies_function as vf
 
 if __name__ == "__main__":
 
@@ -17,6 +18,7 @@ if __name__ == "__main__":
         hh_api_data.get_vacancies(user_text, user_region_id,
                                   user_salary)
         uf.show_vacancies()
+        vf.collect_hh_vacancies()
     else:
         pass
 
